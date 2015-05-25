@@ -20,7 +20,9 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#pragma once
+#ifndef __TRACEWRAPPER_H__
+#define __TRACEWRAPPER_H__
+
 #include <linux/version.h>
 #include <linux/kallsyms.h>
 
@@ -45,3 +47,5 @@
 	    func, ctx)
 
 #endif
+
+#endif /* __TRACEWRAPPER_H__ */

@@ -20,7 +20,9 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#pragma once
+#ifndef __NETHOOK_H__
+#define __NETHOOK_H__
+
 #include <linux/netdevice.h>
 
 bool nethook_initialize(struct net_device *dev);
@@ -29,6 +31,7 @@ void nethook_cleanup(void);
 // Other cores should NOT be stopped at this point. Nethook will grab relevant
 // spinlocks and ensure other cores won't.
 void nethook_take_relevant_resources(void);
+
 // Other cores may be still frozen. Nethook should not do anything that may
 // block.
 void nethook_release_relevant_resources(void);
@@ -41,3 +44,5 @@ void nethook_netpoll_work_starting(void);
 
 // Other cores SHOULD be stopped at this point.
 void nethook_netpoll_work_done(void);
+
+#endif /* __NETHOOK_H__ */

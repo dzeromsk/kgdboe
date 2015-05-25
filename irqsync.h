@@ -20,7 +20,9 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#pragma once
+#ifndef __IRQSYNC_H__
+#define __IRQSYNC_H__
+
 #include <linux/irq.h>
 #include <linux/interrupt.h>
 #include <linux/timer.h>
@@ -51,3 +53,5 @@ bool irqsync_add_managed_irq(struct irqsync_manager *mgr, unsigned number,
 
 void irqsync_suspend_irqs(struct irqsync_manager *mgr);
 void irqsync_resume_irqs(struct irqsync_manager *mgr);
+
+#endif /* __IRQSYNC_H__ */

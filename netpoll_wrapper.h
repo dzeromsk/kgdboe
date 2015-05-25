@@ -20,7 +20,9 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#pragma once
+#ifndef __NETPOLL_WRAPPER_H__
+#define __NETPOLL_WRAPPER_H__
+
 #include <linux/netpoll.h>
 #include <linux/atomic.h>
 #include <linux/version.h>
@@ -93,3 +95,5 @@ netpoll_wrapper_set_drop_flag(struct netpoll_wrapper *pWrapper, bool flag)
 void netpoll_poll_dev_copy(struct net_device *dev,
 			   void (*zap_completion_queue)(void));
 #endif
+
+#endif /* __NETPOLL_WRAPPER_H__ */

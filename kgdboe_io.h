@@ -20,8 +20,12 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#pragma once
+#ifndef __KGDBOE_IO_H__
+#define __KGDBOE_IO_H__
 
 int kgdboe_io_init(const char *device_name, int port, const char *local_ip,
 		   bool force_single_core);
+
 void kgdboe_io_cleanup(void);
+
+#endif /* __KGDBOE_IO_H__ */

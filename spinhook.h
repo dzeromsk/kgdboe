@@ -20,7 +20,9 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#pragma once
+#ifndef __SPINHOOK_H__
+#define __SPINHOOK_H__
+
 #include <linux/spinlock.h>
 #include <linux/list.h>
 
@@ -72,3 +74,5 @@ void spinlock_hook_manager_save_and_reset_all_locks(
 
 // Restores the saved lock state.
 void spinlock_hook_manager_restore_all_locks(struct spinlock_hook_manager *mgr);
+
+#endif /* __SPINHOOK_H__ */

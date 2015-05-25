@@ -20,7 +20,9 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-#pragma once
+#ifndef __TIMERHOOK_H__
+#define __TIMERHOOK_H__
+
 #include <linux/module.h>
 #include <linux/spinlock.h>
 
@@ -38,3 +40,5 @@ static inline spinlock_t *timerhook_get_spinlock(struct timer_hook *hook)
 	BUG_ON(!hook);
 	return &hook->lock;
 }
+
+#endif /* __TIMERHOOK_H__ */
