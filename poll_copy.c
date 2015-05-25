@@ -4,7 +4,8 @@
 #include "netpoll_wrapper.h"
 
 /*
-	This file contains copies of netpoll_poll_dev() and all related functions that are no longer usable
+	This file contains copies of netpoll_poll_dev() and all related
+   functions that are no longer usable
 	in kernel 3.15.
 */
 
@@ -35,16 +36,18 @@ static void poll_napi(struct net_device *dev, int budget)
 {
 	struct napi_struct *napi;
 
-	list_for_each_entry(napi, &dev->napi_list, dev_list) {
+	list_for_each_entry(napi, &dev->napi_list, dev_list)
+	{
 		if (napi->poll_owner != smp_processor_id() &&
-			spin_trylock(&napi->poll_lock)) {
+		    spin_trylock(&napi->poll_lock)) {
 			budget = poll_one_napi(napi, budget);
 			spin_unlock(&napi->poll_lock);
 		}
 	}
 }
 
-void netpoll_poll_dev_copy(struct net_device *dev, void(*zap_completion_queue)(void))
+void netpoll_poll_dev_copy(struct net_device *dev,
+			   void (*zap_completion_queue)(void))
 {
 	const struct net_device_ops *ops;
 	struct netpoll_info *ni = rcu_dereference_bh(dev->npinfo);

@@ -24,7 +24,8 @@ struct irqsync_manager
 struct irqsync_manager *irqsync_create(void);
 void irqsync_free(struct irqsync_manager *mgr);
 
-bool irqsync_add_managed_irq(struct irqsync_manager *mgr, unsigned number, struct irq_desc *irq);
+bool irqsync_add_managed_irq(struct irqsync_manager *mgr, unsigned number,
+			     struct irq_desc *irq);
 
 void irqsync_suspend_irqs(struct irqsync_manager *mgr);
 void irqsync_resume_irqs(struct irqsync_manager *mgr);

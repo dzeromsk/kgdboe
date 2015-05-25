@@ -2,14 +2,20 @@
 #include <linux/slab.h>
 
 /*
-	This file contains the code that disables the IRQ used by the network card for the duration of using it from kgdb via the netpoll API.
-	This is needed on the multi-core systems because the network driver may try to disable/enable the IRQ around the netpoll call and actually 
-	enabling it would need some internal locks of the interrupt controller driver that may be held by other cores. As IRQ disabling in
-	Linux is recursive, once we disable the IRQ, enabling and disabling it from the network card driver will just keep it disabled without
+	This file contains the code that disables the IRQ used by the network
+   card for the duration of using it from kgdb via the netpoll API.
+	This is needed on the multi-core systems because the network driver may
+   try to disable/enable the IRQ around the netpoll call and actually
+	enabling it would need some internal locks of the interrupt controller
+   driver that may be held by other cores. As IRQ disabling in
+	Linux is recursive, once we disable the IRQ, enabling and disabling it
+   from the network card driver will just keep it disabled without
 	invoking any dangerous code from the APIC.
 
-	Note that we cannot enable the IRQ immediately when done talking to the driver as the other cores (potentially holding APIC locks) are
-	still active. For that reason we use a timer to enable the IRQ later once the normal execution is resumed.
+	Note that we cannot enable the IRQ immediately when done talking to the
+   driver as the other cores (potentially holding APIC locks) are
+	still active. For that reason we use a timer to enable the IRQ later
+   once the normal execution is resumed.
 */
 
 static void irqsync_timer_func(unsigned long ctx);
@@ -17,7 +23,8 @@ static void irqsync_timer_func(unsigned long ctx);
 
 struct irqsync_manager *irqsync_create(void)
 {
-	struct irqsync_manager* result = (struct irqsync_manager *)kmalloc(sizeof(struct irqsync_manager), GFP_KERNEL);
+	struct irqsync_manager *result = (struct irqsync_manager *)kmalloc(
+	    sizeof(struct irqsync_manager), GFP_KERNEL);
 	if (!result)
 		return NULL;
 	memset(result, 0, sizeof(*result));
@@ -43,17 +50,16 @@ void irqsync_free(struct irqsync_manager *mgr)
 		irqsync_enable_all_irqs_locked(mgr);
 	spin_unlock(&mgr->lock);
 
-	list_for_each_entry_safe(irq, tmp, &mgr->irqs, list)
-	{
-		kfree(irq);
-	}
+	list_for_each_entry_safe(irq, tmp, &mgr->irqs, list) { kfree(irq); }
 
 	kfree(mgr);
 }
 
-bool irqsync_add_managed_irq(struct irqsync_manager *mgr, unsigned number, struct irq_desc *irq)
+bool irqsync_add_managed_irq(struct irqsync_manager *mgr, unsigned number,
+			     struct irq_desc *irq)
 {
-	struct managed_irq* result = (struct managed_irq *)kmalloc(sizeof(struct managed_irq), GFP_KERNEL);
+	struct managed_irq *result = (struct managed_irq *)kmalloc(
+	    sizeof(struct managed_irq), GFP_KERNEL);
 	if (!result)
 		return false;
 
@@ -74,8 +80,7 @@ void irqsync_suspend_irqs(struct irqsync_manager *mgr)
 	spin_lock(&mgr->lock);
 	BUG_ON(mgr->suspend_active);
 	mgr->suspend_active = true;
-	if (!mgr->irqs_disabled)
-	{
+	if (!mgr->irqs_disabled) {
 		list_for_each_entry(irq, &mgr->irqs, list)
 		{
 			disable_irq(irq->number);
@@ -96,8 +101,7 @@ static void irqsync_timer_func(unsigned long ctx)
 {
 	struct irqsync_manager *mgr = (struct irqsync_manager *)ctx;
 	BUG_ON(!mgr);
-	if (spin_trylock(&mgr->lock))
-	{
+	if (spin_trylock(&mgr->lock)) {
 		if (mgr->irqs_disabled)
 			irqsync_enable_all_irqs_locked(mgr);
 		spin_unlock(&mgr->lock);
@@ -114,8 +118,5 @@ static void irqsync_enable_all_irqs_locked(struct irqsync_manager *mgr)
 	BUG_ON(!mgr->irqs_disabled);
 	mgr->irqs_disabled = false;
 
-	list_for_each_entry(irq, &mgr->irqs, list)
-	{
-		enable_irq(irq->number);
-	}
+	list_for_each_entry(irq, &mgr->irqs, list) { enable_irq(irq->number); }
 }
